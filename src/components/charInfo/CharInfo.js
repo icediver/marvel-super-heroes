@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import './charInfo.scss';
 import Spinner from '../spinner/Spinner';
@@ -7,71 +7,62 @@ import Skeleton  from '../skeleton/Skeleton'
 // import thor from '../../resources/img/thor.jpeg';
 import MarvelService from '../../services/MarvelService';
 
-class  CharInfo extends Component {
-    state = {
-        char: null,
-        loading: false,
-        error: false
-    }
-    marvelService = new MarvelService();
+const CharInfo = (props) => {
 
-    componentDidMount() {
-        this.updateChar();
-    }
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.charId !== prevProps.charId) {
-            this.updateChar();
-        }
-    }
-    updateChar = () => {
-        const {charId} = this.props;
+    const [char, setChar] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+        
+    const marvelService = new MarvelService();
+
+    // useEffect(() => {
+    //     updateChar();
+    // }, []);
+
+    useEffect(() => {
+        updateChar();
+    }, [props.charId]);
+
+    const updateChar = () => {
+        const {charId} = props;
         if (!charId) {
             return;
         }
-        this.onCharLoading();
-        this.marvelService
-            .getCharacter(charId)            
-            .then(this.onCharLoaded)
-            // .then(el => console.log(el))
-            .catch(this.onError)
+        onCharLoading();
+        marvelService
+        .getCharacter(charId)            
+        .then(onCharLoaded)
+        // .then(el => console.log(el))
+        .catch(onError)
     }
-    onCharLoaded = (char) => {
-        this.setState(
-            {
-                char, 
-                loading: false
-            })
+    const onCharLoaded = (char) => {
+            setChar(char);
+            setLoading(false);
     }
-    onCharLoading = () => {
-        this.setState(
-            { 
-                loading: true
-            })
-    }
-    onError = () => {
-        this.setState(
-            {
-                loading: false,
-                error: true
-            })
-    }
-    render() {
-        const {char, loading, error} = this.state;
-        // console.log(char, loading, error);
-        const skeleton = char || loading || error ? null : <Skeleton/>
-        const erorrMesage = error ? <ErrorMesage/> : null
-        const spinner = loading ? <Spinner/> : null
-        const content = !(loading || error || !char) ? <View char={char}/> : null;
-        return (
-            <div className="char__info">
-                {skeleton}
-                {erorrMesage}
-                {spinner}
-                {content}
+    const onCharLoading = () => {
 
-            </div>
-        )
+        setLoading(true);
+        
     }
+    const onError = () => {
+
+        setLoading(false);
+        setError(true);
+        
+    }
+    const skeleton = char || loading || error ? null : <Skeleton/>
+    const erorrMesage = error ? <ErrorMesage/> : null
+    const spinner = loading ? <Spinner/> : null
+    const content = !(loading || error || !char) ? <View char={char}/> : null;
+    return (
+        <div className="char__info">
+            {skeleton}
+            {erorrMesage}
+            {spinner}
+            {content}
+
+        </div>
+    )
 }
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki, comics} = char;
@@ -79,6 +70,7 @@ const View = ({char}) => {
         return(
             <>
             <div className="char__basics">
+                    {/* <img src={thumbnail} alt={name} style={style}/> */}
                     <img src={thumbnail} alt={name} style={style}/>
                     <div>
                         <div className="char__info-name">{name}</div>
@@ -106,7 +98,7 @@ const View = ({char}) => {
                             
                             }) : (
                                 <li className="char__comics-item">
-                                    No comics availabe
+                                    There is no comics with this character
                                 </li>                               
                             ) 
                     }
