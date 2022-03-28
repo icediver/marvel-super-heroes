@@ -44,12 +44,7 @@ const CharList = (props) => {
         setCharEnded(charEnded => ended);
     };
     const onError = () => {
-        this.setState(
-            {
-                loading: false,
-                error: true
-            })
-
+        
         setError(true);
         setLoading(loading => false);
     };
@@ -74,7 +69,7 @@ const CharList = (props) => {
         if (list.length > 0) {
             const Arr  = list.map((el, i)=> {            
                 const imgStyle = el.thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" 
-                ? {'objectFit': 'contain', 'transform': 'translate(-15px, -30px)'} : {'objectFit': 'cover'};
+                ? {'objectFit' : 'unset'} : {'objectFit': 'cover'};
                 return (
                     <li 
                         ref={el => itemRefs.current[i] = el}

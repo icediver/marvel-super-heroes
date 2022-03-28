@@ -19,9 +19,9 @@ const App = () =>  {
         <div className="app">
             <AppHeader/>
             <main>
-                {/* <RandomChar updateDataList={this.updateDataList}/> */}
+                {/* <RandomChar updateDataList={this.updateDataList}/>  */}
                 <ErrorBoundary>
-                    <RandomChar/>
+                    <RandomChar />
                 </ErrorBoundary>   
                 <div className="char__content">
                     <CharList onCharSelected={onCharSelected}/>
