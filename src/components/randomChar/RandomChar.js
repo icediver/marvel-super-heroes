@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMesage from '../erorrMesage/ErrorMesage';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import './randomChar.scss';
 // import thor from '../../resources/img/thor.jpeg';
 import mjolnir from '../../resources/img/mjolnir.png';
@@ -10,10 +10,9 @@ const noPicUrl = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_availabl
 
 const RandomChar = () => {
     const [char, setChar] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const {loading, error, getCharacter, clearError} = useMarvelService();
     
-    const marvelService = new MarvelService();
+    
     useEffect(() => {
         updateChar();
         const timerId = setInterval(updateChar, 60000);
@@ -25,24 +24,12 @@ const RandomChar = () => {
 
     const onCharLoaded = (char) => {
         setChar(char);
-        setLoading(false);
-    }
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-    const onError = () => {
-
-        setLoading(false);
-        setError(true);
-        
     }
     const updateChar = () => {
+        clearError();
         const id = Math.floor(Math.random()*(1011140 - 1011000) + 1011000);
-        onCharLoading();
-        marvelService
-            .getCharacter(id)            
-            .then(onCharLoaded)            
-            .catch(onError)
+            getCharacter(id)            
+            .then(onCharLoaded)
     }
     const erorrMesage = error ? <ErrorMesage/> : null
     const spinner = loading ? <Spinner/> : null

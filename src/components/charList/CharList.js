@@ -3,34 +3,28 @@ import Spinner from '../spinner/Spinner';
 import ErrorMesage from '../erorrMesage/ErrorMesage';
 // import abyss from '../../resources/img/abyss.jpg';
 import { useState, useEffect, useRef } from 'react';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import PropTypes from 'prop-types';
 
 const CharList = (props) => {
 
     const [charList, setCharList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [newItemLoading, setNewItemLoading] = useState(true);
     const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnded] = useState(false);
         
-    const marvelService = new MarvelService();
+    const {loading, error, getAllCharacters} = useMarvelService();
 
     useEffect(() => {
-        onRequest();
+        onRequest(offset, true);
     }, []);
 
-    const onRequest = (offset) => {
-        onCharListLoading();
-        marvelService.getAllCharacters(offset)
+    const onRequest = (offset, initial) => {
+        initial ? setNewItemLoading(false) : setNewItemLoading(true)
+        getAllCharacters(offset)
             .then(onCharListLoaded)
-            .catch(onError);
     };
 
-    const onCharListLoading = (chars) => {        
-            setNewItemLoading(true);
-    };
     const onCharListLoaded = (newCharList) => {
         let ended = false;
         if(newCharList.length<9) {
@@ -38,22 +32,12 @@ const CharList = (props) => {
         }
         
         setCharList(charList => [...charList, ...newCharList]);
-        setLoading(loading => false);
         setNewItemLoading(setNewItemLoading => false);
         setOffset(offset => (offset + 9));
         setCharEnded(charEnded => ended);
     };
-    const onError = () => {
-        
-        setError(true);
-        setLoading(loading => false);
-    };
     const itemRefs = useRef([]);
 
-    // setRef = (ref) => {
-        
-    //     this.itemRefs.push(ref);
-    // }
     const focusOnChar = (id) => {
 
         itemRefs.current.forEach(el => {
@@ -98,18 +82,16 @@ const CharList = (props) => {
     }
     
     
-    // console.log(this.props.onCharSelected);
     const newArr =  dataListOfCharacters(charList);
     
     const erorrMesage = error ? <ErrorMesage/> : null
-    const spinner = loading ? <Spinner/> : null
-    const content = !(loading || error) ? newArr : null;  
+    const spinner = loading && !newItemLoading ? <Spinner/> : null
     return (
         <div className="char__list">
             <ul className="char__grid">                    
                 {erorrMesage}
                 {spinner}
-                {content}
+                {newArr}
                 {/* <li className="char__item char__item_selected"> */}
             </ul>
             <button 
