@@ -86,6 +86,8 @@ const CharList = (props) => {
     
     const erorrMesage = error ? <ErrorMesage/> : null
     const spinner = loading && !newItemLoading ? <Spinner/> : null
+
+    
     return (
         <div className="char__list">
             <ul className="char__grid">                    
