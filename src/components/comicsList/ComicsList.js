@@ -5,6 +5,7 @@ import useMarvelService from '../../services/MarvelService';
 import { useState, useEffect, useRef } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMesage from '../erorrMesage/ErrorMesage';
+import { Link } from 'react-router-dom';
 
 const ComicsList = () => {
     const [comicsList, setComicsList] = useState([]);
@@ -21,6 +22,7 @@ const ComicsList = () => {
     const onRequest = (offset, initial) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true)
         getAllComics(offset)
+            // .then(item => console.log(item))
             .then(onComicsLoaded)
             
     };
@@ -60,11 +62,11 @@ const ComicsList = () => {
                     onClick={() => {                            
                         focusOnComics(i)                            
                         }}>
-                    <a href="#">
+                    <Link  to={`/comics/${el.id}`}>
                         <img src={el.thumbnail} alt={el.title} className="comics__item-img"/>
                         <div className="comics__item-name">{el.title}</div>
                         <div className="comics__item-price">{el.prices}</div>
-                    </a>
+                    </Link>
                 </li>
             )
         })
