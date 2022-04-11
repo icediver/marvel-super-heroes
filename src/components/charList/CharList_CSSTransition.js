@@ -1,7 +1,7 @@
 import './charList.scss';
 import Spinner from '../spinner/Spinner';
 import ErrorMesage from '../erorrMesage/ErrorMesage';
-import { Transition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 // import abyss from '../../resources/img/abyss.jpg';
 import { useState, useEffect, useRef } from 'react';
 import useMarvelService from '../../services/MarvelService';
@@ -53,20 +53,6 @@ const CharList = (props) => {
         itemRefs.current[id].focus();
     
     };
-
-    const duration = 200;
-
-    const defaultStyle = {
-        transition: `opacity ${duration}ms ease-in-out`,
-        opacity: 0,
-    }
-
-    const transitionStyles = {
-        // entering: { opacity: 0 },
-        entered:  { opacity: 1 },
-        exiting:  { opacity: 0 },
-        exited:  { opacity: 0 },
-    };
     
     function dataListOfCharacters  (list) {
 
@@ -77,13 +63,10 @@ const CharList = (props) => {
             ? {'objectFit' : 'unset'} : {'objectFit': 'cover'};
             
             return (
-                <Transition key={el.id}  timeout={duration}>
-                    {state => (
+                <CSSTransition key={el.id}  timeout={500} classNames="char__item">
+                    
+                    
                         <li 
-                            style={{
-                                ...defaultStyle,
-                                ...transitionStyles[state]
-                            }}
                             ref={el => itemRefs.current[i] = el}
                             tabIndex={0}
                             className="char__item"                                
@@ -102,13 +85,13 @@ const CharList = (props) => {
                             <img src={el.thumbnail} alt={el.name} style={imgStyle}/>
                             <div className="char__name">{el.name}</div>
                         </li>
-                    )}
-                </Transition>
+                    
+                </CSSTransition>
 
                 );
 
         })
-        
+        // setInProp(false);
         return (
             <ul className="char__grid">
                 <TransitionGroup component={null}>

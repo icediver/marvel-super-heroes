@@ -6,16 +6,13 @@ import ErrorMesage from '../erorrMesage/ErrorMesage';
 import Skeleton  from '../skeleton/Skeleton'
 // import thor from '../../resources/img/thor.jpeg';
 import useMarvelService from '../../services/MarvelService';
+import FindCharacter from '../findcharacter/FindCharacter'
 
 const CharInfo = (props) => {
 
     const [char, setChar] = useState(null);
         
     const {error, loading, getCharacter, clearError} = useMarvelService();
-
-    // useEffect(() => {
-    //     updateChar();
-    // }, []);
 
     useEffect(() => {
         updateChar();
@@ -39,13 +36,20 @@ const CharInfo = (props) => {
     const spinner = loading ? <Spinner/> : null
     const content = !(loading || error || !char) ? <View char={char}/> : null;
     return (
-        <div className="char__info">
-            {skeleton}
-            {erorrMesage}
-            {spinner}
-            {content}
-
+        <div className='char__right'>
+            <div className="char__info">
+                {skeleton}
+                {erorrMesage}
+                {spinner}
+                {content}           
+            </div>
+            
+            <FindCharacter />
+            
+                
+        
         </div>
+        
     )
 }
 const View = ({char}) => {
